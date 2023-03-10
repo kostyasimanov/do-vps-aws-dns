@@ -1,0 +1,24 @@
+vendor/
+/.idea
+
+# binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+#test binary (go test -c)
+*.test
+
+#output
+*.out
+
+#workspace
+go.work
+
+# terraform
+
+*.tfvars
+/.terraform/
+*.tfstate*

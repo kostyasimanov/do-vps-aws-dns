@@ -1,0 +1,4 @@
+personal_ssh_key = ""
+do_token = ""
+email_tag = "user_at_mail_com"
+current_task_tag = "task_name:"
