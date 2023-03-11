@@ -1,3 +1,6 @@
-data "digitalocean_ssh_key" "company" {
-  name = var.company_ssh_key_name
+data "external" "get_do_ssh_fingerprint" {
+  program = ["bash", "./script/ssh_finger.sh"]
+  query = {
+    token = var.do_token
+  }
 }

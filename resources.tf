@@ -16,10 +16,10 @@ resource "digitalocean_tag" "email" {
 }
 
 resource "digitalocean_droplet" "devops_vps" {
-  image  = "ubuntu-22-04-x64"
-  name   = "devops.${var.domain_name}"
-  region = "fra1"
-  size   = "s-1vcpu-1gb"
-  tags = [digitalocean_tag.devops.id, digitalocean_tag.current_task.id, digitalocean_tag.email.id]
-  ssh_keys = [digitalocean_ssh_key.personal.fingerprint, data.digitalocean_ssh_key.company.fingerprint]
+  image    = "ubuntu-22-04-x64"
+  name     = "devops.${var.domain_name}"
+  region   = "fra1"
+  size     = "s-1vcpu-1gb"
+  tags     = [digitalocean_tag.devops.id, digitalocean_tag.current_task.id, digitalocean_tag.email.id]
+  ssh_keys = [digitalocean_ssh_key.personal.fingerprint, data.external.get_do_ssh_fingerprint.result.fingerprint]
 }
