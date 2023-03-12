@@ -48,3 +48,7 @@ variable "root_password" {
   default     = ""
   sensitive   = true
 }
+variable "personal_ssh_key_path" {
+  description = "Path to personal ssh key"
+  default     = ""
+}
