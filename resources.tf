@@ -11,6 +11,22 @@ resource "digitalocean_droplet" "devops_vps" {
   size     = "s-1vcpu-1gb"
   tags     = [var.devops_tag, var.current_task_tag, var.email_tag]
   ssh_keys = [digitalocean_ssh_key.personal.fingerprint, data.digitalocean_ssh_key.company.fingerprint]
+
+  connection {
+    type        = "ssh"
+    user        = "root"
+    host        = self.ipv4_address
+    private_key = file(var.personal_ssh_key_path)
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo echo -e root:${var.root_password} | sudo chpasswd",
+      "sleep 20",
+      "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config.d/50-cloud-init.conf",
+      "sudo systemctl restart ssh",
+    ]
+  }
 }
 
 resource "aws_route53_record" "www" {
