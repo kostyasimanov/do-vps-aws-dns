@@ -12,5 +12,5 @@ terraform {
 }
 
 locals {
-  ip_address = digitalocean_droplet.devops_vps.ipv4_address
+  ip_address = digitalocean_droplet.devops_vps[*].ipv4_address
 }
