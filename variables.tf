@@ -22,7 +22,8 @@ variable "personal_ssh_key" {
 }
 variable "domain_name" {
   description = "Domain name"
-  default     = "vps.company"
+  type        = list(any)
+  default     = ["vps01", "vps02"]
 }
 variable "company_ssh_key_name" {
   description = "SSH Key Name for searching by name"
@@ -40,5 +41,10 @@ variable "aws_access_key" {
 }
 variable "aws_secret_key" {
   description = "AWS Secret Key"
+  sensitive   = true
+}
+variable "root_password" {
+  description = "Default root password"
+  default     = ""
   sensitive   = true
 }
