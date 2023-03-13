@@ -21,11 +21,16 @@ resource "digitalocean_droplet" "devops_vps" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo echo -e root:${var.root_password} | sudo chpasswd",
+      "sudo echo -e 'root:${element(random_string.password[*].result, count.index)}' | sudo chpasswd",
       "sleep 20",
       "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config.d/50-cloud-init.conf",
       "sudo systemctl restart ssh",
     ]
+  }
+
+  provisioner "local-exec" {
+    command = "Add-Content '${var.login}-${count.index+1}.${data.aws_route53_zone.primary.name} root ${element(random_string.password[*].result, count.index)}' -Path passwords.txt"
+    interpreter = ["PowerShell", "-Command"]
   }
 }
 
@@ -36,4 +41,10 @@ resource "aws_route53_record" "www" {
   type    = "A"
   ttl     = 300
   records = [element(local.ip_address, count.index)]
+}
+
+resource "random_string" "password" {
+  count = length(var.domain_name)
+  length = 16
+  override_special = "!@#$%&"
 }
