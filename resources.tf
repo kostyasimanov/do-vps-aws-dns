@@ -29,7 +29,7 @@ resource "digitalocean_droplet" "devops_vps" {
   }
 
   provisioner "local-exec" {
-    command = "Add-Content '${var.login}-${count.index+1}.${data.aws_route53_zone.primary.name} root ${element(random_string.password[*].result, count.index)}' -Path passwords.txt"
+    command     = "Add-Content '${var.login}-${count.index + 1}.${data.aws_route53_zone.primary.name} root ${element(random_string.password[*].result, count.index)}' -Path passwords.txt"
     interpreter = ["PowerShell", "-Command"]
   }
 }
@@ -44,7 +44,7 @@ resource "aws_route53_record" "www" {
 }
 
 resource "random_string" "password" {
-  count = length(var.domain_name)
-  length = 16
+  count            = length(var.domain_name)
+  length           = 16
   override_special = "!@#$%&"
 }

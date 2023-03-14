@@ -52,3 +52,7 @@ variable "personal_ssh_key_path" {
   description = "Path to personal ssh key"
   default     = ""
 }
+# variable "devs" {
+#   type    = list(any)
+#   default = ["${var.login}-lb", "${var.login}-app1", "${var.login}-app2"]
+# }
