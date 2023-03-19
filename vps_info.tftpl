@@ -1,5 +1,7 @@
-%{ for vps in vps_info ~}
-${vps.index + 1}: ${vps.dns_name} ${vps.ip_address} ${vps.root_password}
+# <index>: <DNS> <ip> <root password>
+
+%{ for index, _ in vps ~}
+${index + 1}: ${dns_name[index]} ${ip_address[index]} ${root_password[index]}
 %{ endfor ~}
 
-# <порядковый номер>: <DNS имя машины> <ip машины> <пароль пользователя root>
+# <index>: <DNS> <ip> <root password>

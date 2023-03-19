@@ -6,7 +6,7 @@ resource "digitalocean_ssh_key" "personal" {
 resource "digitalocean_droplet" "devops_vps" {
   count    = length(var.vps_names)
   image    = "ubuntu-22-04-x64"
-  name     = element(var.vps_names, count.index)
+  name     = var.vps_names[count.index]
   region   = "fra1"
   size     = "s-1vcpu-1gb"
   tags     = [var.devops_tag, var.current_task_tag, var.email_tag]
@@ -50,5 +50,12 @@ resource "random_string" "password" {
 }
 resource "local_file" "vps_info" {
   filename = "vps_info.txt"
-  content  = templatefile("${path.module}/vps_info.tftpl", { vps_info = local.vps_info })
+  content = templatefile("${path.module}/vps_info.tftpl",
+    {
+      vps           = var.vps_names,
+      dns_name      = local.customer_vps_name,
+      ip_address    = local.ip_address,
+      root_password = random_string.password[*].result,
+    }
+  )
 }
