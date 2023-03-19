@@ -20,11 +20,6 @@ variable "personal_ssh_key" {
   description = "Personal SSH Pub Key"
   sensitive   = true
 }
-variable "domain_name" {
-  description = "Domain name"
-  type        = list(any)
-  default     = ["vps01", "vps02"]
-}
 variable "company_ssh_key_name" {
   description = "SSH Key Name for searching by name"
 }
@@ -51,4 +46,9 @@ variable "root_password" {
 variable "personal_ssh_key_path" {
   description = "Path to personal ssh key"
   default     = ""
+}
+variable "vps_names" {
+  description = "Prefixes for VPS"
+  type        = list(string)
+  default     = ["lb", "app1", "app2"]
 }

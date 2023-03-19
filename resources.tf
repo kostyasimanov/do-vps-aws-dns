@@ -4,9 +4,9 @@ resource "digitalocean_ssh_key" "personal" {
 }
 
 resource "digitalocean_droplet" "devops_vps" {
-  count    = length(var.domain_name)
+  count    = length(var.vps_names)
   image    = "ubuntu-22-04-x64"
-  name     = "${element(var.domain_name, count.index)}-${count.index + 1}"
+  name     = element(var.vps_names, count.index)
   region   = "fra1"
   size     = "s-1vcpu-1gb"
   tags     = [var.devops_tag, var.current_task_tag, var.email_tag]
@@ -29,22 +29,26 @@ resource "digitalocean_droplet" "devops_vps" {
   }
 
   provisioner "local-exec" {
-    command = "Add-Content '${var.login}-${count.index+1}.${data.aws_route53_zone.primary.name} root ${element(random_string.password[*].result, count.index)}' -Path passwords.txt"
+    command     = "Add-Content '${var.login}-${var.devs[count.index]}.${data.aws_route53_zone.primary.name} root ${element(random_string.password[*].result, count.index)}' -Path passwords.txt"
     interpreter = ["PowerShell", "-Command"]
   }
 }
 
 resource "aws_route53_record" "www" {
-  count   = length(var.domain_name)
+  count   = length(var.vps_names)
   zone_id = data.aws_route53_zone.primary.zone_id
-  name    = "${var.login}-${count.index + 1}"
+  name    = "${var.login}-${var.devs[count.index]}"
   type    = "A"
   ttl     = 300
   records = [element(local.ip_address, count.index)]
 }
 
 resource "random_string" "password" {
-  count = length(var.domain_name)
-  length = 16
+  count            = length(var.vps_names)
+  length           = 16
   override_special = "!@#$%&"
+}
+resource "local_file" "vps_info" {
+  filename = "vps_info.txt"
+  content  = templatefile("${path.module}/vps_info.tftpl", { vps_info = local.vps_info })
 }
